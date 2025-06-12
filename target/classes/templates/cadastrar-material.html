@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Material - ReciclaFácil</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <!-- Caminhos para CSS geral e específico ajustados -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/material.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <div class="conteudo-pagina">
+            <header class="cabecalho-principal">
+                <div class="area-logo">
+                    <div class="container-icone-logo">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path></svg>
+                    </div>
+                    <h2 class="titulo-logo">ReciclaFácil</h2>
+                </div>
+                <nav class="navegacao-cabecalho">
+                    <a class="link-navegacao" href="/">Início</a>
+                    <a class="link-navegacao" href="/carrinho">Carrinho <span id="contador-carrinho" class="contador-badge" style="display: none;">0</span></a>
+                    <a class="link-navegacao" href="/entrar">Entrar</a>
+                </nav>
+            </header>
+            
+            <main class="principal">
+                <div class="conteudo-centralizado">
+                    <div class="cabecalho-pagina">
+                        <h1 class="titulo-pagina">Cadastrar Material Reciclável</h1>
+                        <p class="subtitulo-pagina">Registre os materiais que você possui para destinação adequada.</p>
+                    </div>
+
+                    <div class="container-formulario-material">
+                        <form id="form-material" class="formulario-material">
+                            <div class="secao-formulario">
+                                <h3 class="titulo-secao-form">Tipo de Material</h3>
+                                <div class="grade-tipos-material">
+                                    <label class="opcao-material" data-tipo="plastico">
+                                        <input type="radio" name="tipo" value="plastico" required>
+                                        <div class="cartao-tipo-material">
+                                            <div class="icone-material">🍶</div>
+                                            <span class="nome-material">Plástico</span>
+                                        </div>
+                                    </label>
+                                    <label class="opcao-material" data-tipo="vidro">
+                                        <input type="radio" name="tipo" value="vidro" required>
+                                        <div class="cartao-tipo-material">
+                                            <div class="icone-material">🍾</div>
+                                            <span class="nome-material">Vidro</span>
+                                        </div>
+                                    </label>
+                                    <label class="opcao-material" data-tipo="metal">
+                                        <input type="radio" name="tipo" value="metal" required>
+                                        <div class="cartao-tipo-material">
+                                            <div class="icone-material">🥫</div>
+                                            <span class="nome-material">Metal</span>
+                                        </div>
+                                    </label>
+                                    <label class="opcao-material" data-tipo="papel">
+                                        <input type="radio" name="tipo" value="papel" required>
+                                        <div class="cartao-tipo-material">
+                                            <div class="icone-material">📄</div>
+                                            <span class="nome-material">Papel</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="secao-formulario">
+                                <h3 class="titulo-secao-form">Detalhes do Material</h3>
+                                <div class="grade-campos">
+                                    <div class="campo-grupo">
+                                        <label for="descricao" class="rotulo-campo">Descrição</label>
+                                        <input type="text" id="descricao" name="descricao" class="campo-input" 
+                                               placeholder="Ex: Garrafas PET, Jornais, Latas de refrigerante..." required>
+                                    </div>
+                                    <div class="campo-grupo">
+                                        <label for="quantidade" class="rotulo-campo">Quantidade</label>
+                                        <input type="number" id="quantidade" name="quantidade" class="campo-input" 
+                                               min="1" placeholder="0" required>
+                                    </div>
+                                    <div class="campo-grupo">
+                                        <label for="unidade" class="rotulo-campo">Unidade</label>
+                                        <select id="unidade" name="unidade" class="campo-input" required>
+                                            <option value="">Selecione a unidade</option>
+                                            <option value="unidades">Unidades</option>
+                                            <option value="kg">Quilogramas (kg)</option>
+                                            <option value="sacolas">Sacolas</option>
+                                            <option value="caixas">Caixas</option>
+                                        </select>
+                                    </div>
+                                    <div class="campo-grupo">
+                                        <label for="localizacao" class="rotulo-campo">Localização (Opcional)</label>
+                                        <input type="text" id="localizacao" name="localizacao" class="campo-input" 
+                                               placeholder="Ex: Quintal, Garagem, Sala...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="secao-formulario">
+                                <h3 class="titulo-secao-form">Observações Adicionais (Opcional)</h3>
+                                <div class="campo-grupo">
+                                    <label for="observacoes" class="rotulo-campo">Observações</label>
+                                    <textarea id="observacoes" name="observacoes" class="campo-textarea" 
+                                              placeholder="Informações adicionais sobre o estado do material, acessibilidade, horário preferido para coleta, etc." 
+                                              rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="acoes-formulario">
+                                <button type="button" class="botao-secundario" onclick="limparFormulario()">
+                                    Limpar
+                                </button>
+                                <button type="submit" class="botao-primario">
+                                    Adicionar ao Carrinho
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Modal de Sucesso -->
+                    <div id="modal-sucesso" class="modal" style="display: none;">
+                        <div class="modal-conteudo">
+                            <div class="modal-icone-sucesso">✅</div>
+                            <h3>Material adicionado com sucesso!</h3>
+                            <p>Seu material foi adicionado ao carrinho de coleta.</p>
+                            <div class="modal-acoes">
+                                <button class="botao-secundario" onclick="fecharModal()">
+                                    Adicionar outro
+                                </button>
+                                <button class="botao-primario" onclick="irParaCarrinho()">
+                                    Ver carrinho
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+      // Roda o script quando a página HTML estiver totalmente carregada
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- PARTE 1: VERIFICAÇÃO DE LOGIN E NAVEGAÇÃO ---
+
+        const dadosUsuarioString = localStorage.getItem('usuarioLogado');
+        const usuario = JSON.parse(dadosUsuarioString);
+        const barraNavegacao = document.querySelector('.navegacao-cabecalho');
+        const areaDoFormulario = document.querySelector('.container-formulario-material');
+
+        if (usuario && usuario.id) {
+          // SE ESTIVER LOGADO:
+          
+          // 1. Atualiza a barra de navegação
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+            <a class="link-navegacao" href="/carrinho">Meu Carrinho</a>
+            <a class="link-navegacao" href="/relatorio">Relatório</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+            <a class="link-navegacao" href="#" id="botao-sair">Sair</a>
+          `;
+
+          // 2. Adiciona a funcionalidade de 'Sair'
+          const botaoSair = document.getElementById('botao-sair');
+          botaoSair.addEventListener('click', function() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = '/entrar';
+          });
+
+          // --- PARTE 2: FUNCIONALIDADE DO FORMULÁRIO ---
+          
+          const formMaterial = document.getElementById('form-material');
+          const modalSucesso = document.getElementById('modal-sucesso');
+
+          // Função para enviar os dados do material
+          function cadastrarMaterial(evento) {
+            evento.preventDefault(); // Impede o recarregamento da página
+
+            // Pega os dados do formulário
+            const dadosDoFormulario = {
+              tipo: formMaterial.tipo.value,
+              descricao: formMaterial.descricao.value,
+              quantidade: parseInt(formMaterial.quantidade.value, 10),
+              unidade: formMaterial.unidade.value,
+              localizacao: formMaterial.localizacao.value,
+              observacoes: formMaterial.observacoes.value
+            };
+
+            // Passo 1: Cadastrar o material
+            fetch(`/api/materiais?usuarioId=${usuario.id}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(dadosDoFormulario)
+            })
+            .then(resposta => {
+              if (!resposta.ok) throw new Error('Falha ao cadastrar o material.');
+              return resposta.json();
+            })
+            .then(materialCriado => {
+              // Passo 2: Adicionar o material criado ao carrinho do usuário
+              const idDoMaterial = materialCriado.id;
+              return fetch(`/api/carrinho/adicionar?usuarioId=${usuario.id}&materialId=${idDoMaterial}`, {
+                method: 'POST'
+              });
+            })
+            .then(resposta => {
+              if (!resposta.ok) throw new Error('Falha ao adicionar ao carrinho.');
+              modalSucesso.style.display = 'block'; // Mostra o pop-up de sucesso
+            })
+            .catch(erro => {
+              console.error('Ocorreu um erro:', erro);
+              alert('Não foi possível completar a operação. Tente novamente.');
+            });
+          }
+          
+          // Associa a função ao envio do formulário
+          formMaterial.addEventListener('submit', cadastrarMaterial);
+
+          // Funcionalidade dos botões do modal
+          const botaoFecharModal = document.querySelector('.modal-acoes .botao-secundario');
+          botaoFecharModal.onclick = function() {
+            modalSucesso.style.display = 'none';
+            formMaterial.reset(); // Limpa o formulário
+          }
+
+          const botaoIrCarrinho = document.querySelector('.modal-acoes .botao-primario');
+          botaoIrCarrinho.onclick = function() {
+            window.location.href = '/carrinho';
+          }
+
+        } else {
+          // SE NÃO ESTIVER LOGADO:
+
+          // 1. Atualiza a barra de navegação para visitante
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="#">Sobre</a>
+            <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            <a class="link-navegacao" href="/entrar">Login</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+          `;
+          
+          // 2. Bloqueia o formulário e mostra uma mensagem
+          areaDoFormulario.innerHTML = `
+            <h2>Você precisa estar logado para cadastrar materiais.</h2>
+            <a href="/entrar" class="botao-primario">Fazer Login</a>
+          `;
+        }
+      });
+    </script>
+</body>
+</html> 

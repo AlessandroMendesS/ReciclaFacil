@@ -1,0 +1,127 @@
+/* css/loginCadastro.css */
+
+/* Adaptação para centralizar o formulário na tela */
+.conteudo-centralizado-login-cadastro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 150px); /* Ajustar altura do header e footer se necessário */
+    padding: 20px;
+    position: relative; /* Para as decorações de fundo */
+    overflow: hidden; /* Para as decorações não ultrapassarem */
+}
+
+.container-form {
+    background-color: var(--cor-fundo-cartao);
+    padding: 30px 40px;
+    border-radius: var(--border-radius-padrao);
+    box-shadow: var(--box-shadow-padrao);
+    width: 100%;
+    max-width: 450px; /* Largura máxima do formulário */
+    text-align: center;
+    z-index: 1; /* Para ficar acima das decorações */
+}
+
+.logo-form h1 {
+    font-size: 1.8em;
+    color: var(--cor-primaria);
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.logo-form p {
+    font-size: 1em;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 25px;
+}
+
+#form-cadastro .form-group,
+#form-login .form-group {
+    margin-bottom: 18px;
+}
+
+#form-cadastro .btn-primary,
+#form-login .btn-primary {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+.form-links {
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+.form-links a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.form-links a:hover {
+    text-decoration: underline;
+}
+
+.form-links .forgot-password {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--cor-texto-secundario);
+}
+
+/* Decorações de Fundo (Exemplo) */
+.bg-decoration {
+    position: absolute;
+    opacity: 0.1;
+    z-index: 0;
+    user-select: none;
+    pointer-events: none;
+}
+
+.leaf-1 {
+    /* Exemplo: uma imagem de folha ou SVG */
+    /* background-image: url('../img/leaf1.svg'); */
+    width: 150px;
+    height: 150px;
+    top: 10%;
+    left: 5%;
+    transform: rotate(-20deg);
+    background-color: var(--cor-primaria); /* Placeholder */
+    border-radius: 50% 0;
+}
+
+.leaf-2 {
+    width: 120px;
+    height: 120px;
+    bottom: 15%;
+    right: 8%;
+    transform: rotate(30deg);
+    background-color: var(--cor-primaria-suave); /* Placeholder */
+    border-radius: 0 50%;
+}
+
+.recycle-symbol {
+    /* Exemplo: símbolo de reciclagem */
+    /* background-image: url('../img/recycle-symbol.svg'); */
+    width: 100px;
+    height: 100px;
+    top: 20%;
+    right: 15%;
+    opacity: 0.05;
+    background-color: var(--cor-texto-secundario); /* Placeholder */
+}
+
+/* Inputs com ícones já estão no style.css, mas podemos ajustar espaçamento se necessário */
+.input-container .form-input {
+    padding-left: 40px; /* Ajuste fino se necessário */
+}
+.input-icon {
+    left: 12px; /* Ajuste fino se necessário */
+}
+
+@media (max-width: 500px) {
+    .container-form {
+        padding: 25px 20px;
+    }
+} 

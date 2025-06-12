@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaFácil - Cadastro</title>
+    <!-- Caminho para CSS geral e específico ajustado -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/loginCadastro.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <header class="cabecalho-principal">
+            <div class="area-logo">
+                <div class="container-icone-logo">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path></svg>
+                </div>
+                <h2 class="titulo-logo">ReciclaFácil</h2>
+            </div>
+            <nav class="navegacao-cabecalho">
+                <a class="link-navegacao" href="/">Início</a>
+                <a class="link-navegacao" href="/entrar">Login</a>
+            </nav>
+        </header>
+
+        <main class="principal">
+            <div class="conteudo-centralizado-login-cadastro">
+                 <!-- Decorações de fundo (se houver no loginCadastro.css) -->
+                <div class="bg-decoration leaf-1"></div>
+                <div class="bg-decoration leaf-2"></div>
+                <div class="bg-decoration recycle-symbol"></div>
+
+                <div class="container-form">
+                    <div class="logo-form">
+                        <h1>🌱 ReciclaFácil</h1>
+                        <p>Sustentabilidade ao seu alcance</p>
+                    </div>
+
+                    <form id="form-cadastro">
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">👤</span>
+                                <input type="text" class="form-input" name="nome" placeholder="Nome completo" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">📧</span>
+                                <input type="email" class="form-input" name="email" placeholder="Seu email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">🏷️</span>
+                                <input type="text" class="form-input" name="username" placeholder="Nome de usuário" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" class="form-input" name="senha" placeholder="Senha" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">🔐</span>
+                                <input type="password" class="form-input" name="confirmarSenha" placeholder="Confirmar senha" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Cadastrar</button>
+                        <div class="form-links">
+                            <a href="/entrar" class="secondary-link">Já tem uma conta? Faça login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+      // Roda o script quando a página HTML estiver totalmente carregada
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        const formCadastro = document.getElementById('form-cadastro');
+
+        // Função que será chamada quando o formulário for enviado
+        function cadastrarUsuario(evento) {
+          evento.preventDefault(); // Impede o recarregamento da página
+
+          // Pega os dados de cada campo do formulário
+          const nome = formCadastro.nome.value;
+          const email = formCadastro.email.value;
+          const username = formCadastro.username.value;
+          const senha = formCadastro.senha.value;
+          const confirmarSenha = formCadastro.confirmarSenha.value;
+
+          // 1. Verifica se as senhas são iguais
+          if (senha !== confirmarSenha) {
+            alert('As senhas não coincidem!');
+            return; // Interrompe a função
+          }
+
+          // 2. Prepara os dados para enviar para a API
+          const dados = {
+            nome: nome,
+            email: email,
+            username: username,
+            senha: senha
+          };
+          
+          // 3. Envia os dados para o backend
+          fetch('/api/usuarios/cadastro', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+          })
+          .then(function(resposta) {
+            // Se a resposta do servidor for 'ok', o cadastro deu certo
+            if (resposta.ok) {
+              alert('Cadastro realizado com sucesso! Você será redirecionado para a tela de login.');
+              window.location.href = '/entrar'; // Redireciona para o login
+            } else {
+              // Se não for 'ok', pega a mensagem de erro do backend
+              return resposta.json().then(function(erro) {
+                // Lança um erro para ser pego pelo .catch()
+                throw new Error(erro.error || 'Não foi possível cadastrar. Verifique os dados.');
+              });
+            }
+          })
+          .catch(function(erro) {
+            // Se qualquer erro acontecer, mostra um alerta na tela
+            alert('Erro: ' + erro.message);
+          });
+        }
+
+        // Associa a função 'cadastrarUsuario' ao evento de 'submit' do formulário
+        formCadastro.addEventListener('submit', cadastrarUsuario);
+      });
+    </script>
+</body>
+</html> 

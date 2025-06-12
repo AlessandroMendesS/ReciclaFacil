@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaFácil</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <!-- Caminho para o CSS ajustado para a estrutura static -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+      <div class="conteudo-pagina">
+        <header class="cabecalho-principal">
+          <div class="area-logo">
+            <div class="container-icone-logo">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <h2 class="titulo-logo">ReciclaFácil</h2>
+          </div>
+          <nav class="navegacao-cabecalho">
+            <!-- Os links de navegação serão inseridos aqui pelo JavaScript -->
+          </nav>
+        </header>
+        <main class="principal">
+          <div class="conteudo-centralizado">
+            <section class="container-banner-destaque">
+              <div class="banner-destaque">
+                <h1 class="titulo-banner-destaque">
+                  Cada garrafa conta. Recicle hoje.
+                </h1>
+                <label class="rotulo-busca">
+                  <div class="grupo-busca">
+                    <div class="icone-busca" aria-hidden="true">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <input
+                      type="search"
+                      placeholder="Pesquise por materiais, marcas, etc."
+                      class="campo-busca"
+                      value=""
+                    />
+                    <div class="botao-busca-container">
+                      <button class="botao-busca">
+                        <span class="texto-truncado">Descubra mais</span>
+                      </button>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </section>
+            <section class="secao-servicos secao-espacada">
+              <h2 class="titulo-secao">
+                O que oferecemos
+              </h2>
+              <div class="grade-servicos">
+                <div class="cartao-servico">
+                  <div
+                    class="imagem-cartao-servico"
+                    style='background-image: url("https://cdn.usegalileo.ai/replicate/31677bf3-cd1e-48b1-958e-51f7a57a6a9c.png");'
+                  ></div>
+                  <div class="conteudo-cartao-servico">
+                    <p class="titulo-cartao-servico">Plástico</p>
+                    <p class="subtitulo-cartao-servico">Por que reciclar plástico?</p>
+                  </div>
+                </div>
+                <div class="cartao-servico">
+                  <div
+                    class="imagem-cartao-servico"
+                    style='background-image: url("https://cdn.usegalileo.ai/replicate/0732bfb8-7c4f-4f4d-903b-df636a5be6b7.png");'
+                  ></div>
+                  <div class="conteudo-cartao-servico">
+                    <p class="titulo-cartao-servico">Vidro</p>
+                    <p class="subtitulo-cartao-servico">Por que reciclar vidro?</p>
+                  </div>
+                </div>
+                <div class="cartao-servico">
+                  <div
+                    class="imagem-cartao-servico"
+                    style='background-image: url("https://cdn.usegalileo.ai/replicate/1d8fee46-d955-41ec-82bd-48b83a426cc5.png");'
+                  ></div>
+                  <div class="conteudo-cartao-servico">
+                    <p class="titulo-cartao-servico">Metal</p>
+                    <p class="subtitulo-cartao-servico">Por que reciclar metal?</p>
+                  </div>
+                </div>
+                <div class="cartao-servico">
+                  <div
+                    class="imagem-cartao-servico"
+                    style='background-image: url("https://cdn.usegalileo.ai/replicate/97d59d02-1fba-41c6-abb5-ded9766ca3ad.png");'
+                  ></div>
+                  <div class="conteudo-cartao-servico">
+                    <p class="titulo-cartao-servico">Papel</p>
+                    <p class="subtitulo-cartao-servico">Por que reciclar papel?</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="secao-galeria secao-espacada-condensada">
+              <div class="item-galeria">
+                <div
+                  class="imagem-galeria-container"
+                  style='background-image: url("https://cdn.usegalileo.ai/replicate/dca622eb-de9e-4ee8-8542-9b87fae7ce0b.png");'
+                ></div>
+              </div>
+              <div class="item-galeria">
+                <div
+                  class="imagem-galeria-container"
+                  style='background-image: url("https://cdn.usegalileo.ai/replicate/0cc4d15e-ed07-4e60-a2b7-de3aff8a51c7.png");'
+                ></div>
+              </div>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+    <script>
+      // Roda o script quando o HTML da página estiver todo carregado
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // 1. Pega os dados do usuário que foram guardados no navegador
+        const dadosUsuarioString = localStorage.getItem('usuarioLogado');
+        const usuario = JSON.parse(dadosUsuarioString); // Converte o texto para um objeto
+
+        // 2. Acessa o local onde a navegação será mostrada
+        const barraNavegacao = document.querySelector('.navegacao-cabecalho');
+        
+        // 3. Verifica se o usuário está logado (se 'usuario' e 'usuario.id' existem)
+        if (usuario && usuario.id) {
+          // SE ESTIVER LOGADO:
+
+          // Define os links para um usuário logado
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+            <a class="link-navegacao" href="/carrinho">Meu Carrinho</a>
+            <a class="link-navegacao" href="/relatorio">Relatório</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+            <a class="link-navegacao" href="#" id="botao-sair">Sair</a>
+          `;
+
+          // Adiciona a funcionalidade de 'Sair' ao botão
+          const botaoSair = document.getElementById('botao-sair');
+          botaoSair.addEventListener('click', function(evento) {
+            evento.preventDefault(); // Impede que o link faça sua ação padrão
+            
+            // Remove os dados do usuário do navegador
+            localStorage.removeItem('usuarioLogado');
+            
+            // Redireciona para a página de login
+            window.location.href = '/entrar';
+          });
+
+        } else {
+          // SE NÃO ESTIVER LOGADO:
+
+          // Define os links para um visitante
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="#">Sobre</a>
+            <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            <a class="link-navegacao" href="/entrar">Login</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+          `;
+        }
+      });
+    </script>
+</body>
+</html> 

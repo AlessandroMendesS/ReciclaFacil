@@ -1,0 +1,210 @@
+/* css/relatorio.css - Estilos para a página de relatório */
+
+.container-grafico {
+    position: relative;
+    max-width: 600px;
+    height: 400px;
+    margin: 0 auto 30px auto;
+    padding: 20px;
+    background-color: var(--cor-fundo-cartao, #fff);
+    border-radius: var(--border-radius-padrao, 8px);
+    box-shadow: var(--box-shadow-padrao, 0 2px 4px rgba(0,0,0,0.1));
+}
+
+.filtros-relatorio {
+    background-color: var(--cor-fundo-cartao);
+    padding: 15px 20px;
+    border-radius: var(--border-radius-padrao);
+    box-shadow: var(--box-shadow-padrao);
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap; /* Permite que os filtros quebrem linha em telas menores */
+    gap: 20px;
+    align-items: center;
+}
+
+.rotulo-filtro {
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+    margin-right: 5px;
+}
+
+.campo-select {
+    padding: 8px 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--border-radius-padrao);
+    background-color: white;
+    min-width: 180px; /* Para melhor visualização */
+    font-size: 0.95em;
+}
+
+.container-relatorio {
+    margin-bottom: 30px;
+}
+
+.mensagem-carregando,
+.relatorio-vazio-mensagem {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--cor-fundo-cartao);
+    border-radius: var(--border-radius-padrao);
+    margin-top: 20px;
+}
+
+.icone-relatorio-vazio {
+    font-size: 3.5em;
+    display: block;
+    margin-bottom: 15px;
+    color: var(--cor-primaria);
+}
+
+.relatorio-vazio-mensagem h2 {
+    font-size: 1.5em;
+    color: var(--cor-texto-principal);
+    margin-bottom: 10px;
+}
+
+.relatorio-vazio-mensagem p {
+    color: var(--cor-texto-secundario);
+    margin-bottom: 20px;
+}
+
+.item-relatorio {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background-color: var(--cor-fundo-cartao);
+    padding: 20px;
+    border-radius: var(--border-radius-padrao);
+    box-shadow: var(--box-shadow-padrao);
+    margin-bottom: 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.item-relatorio:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.icone-tipo-material-relatorio {
+    font-size: 2.2em;
+    padding: 10px;
+    background-color: var(--cor-primaria-suave);
+    color: var(--cor-primaria);
+    border-radius: 50%; /* Ícone redondo para diferenciar do carrinho */
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Para não encolher */
+}
+
+.detalhes-item-relatorio {
+    flex-grow: 1;
+}
+
+.detalhes-item-relatorio h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.info-item-relatorio {
+    font-size: 0.9em;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 4px;
+}
+
+.info-item-relatorio strong {
+    color: var(--cor-texto-principal);
+    font-weight: 500;
+}
+
+/* Estilos para tabela (alternativa de visualização) */
+.tabela-relatorio {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--cor-fundo-cartao);
+    box-shadow: var(--box-shadow-padrao);
+    border-radius: var(--border-radius-padrao);
+    overflow: hidden; /* Para o border-radius funcionar nas bordas da tabela */
+}
+
+.tabela-relatorio th,
+.tabela-relatorio td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.tabela-relatorio thead th {
+    background-color: var(--cor-primaria-suave);
+    color: var(--cor-primaria);
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.tabela-relatorio tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabela-relatorio tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+    .filtros-relatorio {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campo-select {
+        width: 100%;
+    }
+
+    .item-relatorio {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .icone-tipo-material-relatorio {
+        margin-bottom: 10px;
+    }
+
+    /* Ajustes para tabela em telas pequenas podem ser necessários, 
+       como rolagem horizontal ou display block para células */
+    .tabela-relatorio thead {
+        display: none; /* Esconde cabeçalhos em telas pequenas, mostra dados com labels */
+    }
+
+    .tabela-relatorio tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid var(--cor-borda);
+        border-radius: var(--border-radius-padrao);
+    }
+
+    .tabela-relatorio td {
+        display: block;
+        text-align: right; /* Alinha o valor à direita */
+        padding-left: 50%; /* Espaço para o label */
+        position: relative;
+        border-bottom: 1px dotted var(--cor-borda); /* Linha pontilhada entre "linhas" */
+    }
+    .tabela-relatorio td:last-child {
+        border-bottom: none;
+    }
+
+    .tabela-relatorio td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+        color: var(--cor-primaria);
+    }
+} 

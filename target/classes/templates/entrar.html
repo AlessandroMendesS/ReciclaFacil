@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReciclaFácil - Login</title>
+    <!-- Caminho para CSS geral e específico ajustado -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/loginCadastro.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <header class="cabecalho-principal">
+            <div class="area-logo">
+                <div class="container-icone-logo">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path></svg>
+                </div>
+                <h2 class="titulo-logo">ReciclaFácil</h2>
+            </div>
+            <nav class="navegacao-cabecalho">
+                <a class="link-navegacao" href="/">Início</a>
+                <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            </nav>
+        </header>
+
+        <main class="principal">
+            <div class="conteudo-centralizado-login-cadastro">
+                <div class="bg-decoration leaf-1"></div>
+                <div class="bg-decoration leaf-2"></div>
+                <div class="bg-decoration recycle-symbol"></div>
+
+                <div class="container-form">
+                    <div class="logo-form">
+                        <h1>🌱 ReciclaFácil</h1>
+                        <p>Acesse sua conta</p>
+                    </div>
+
+                    <form id="form-login">
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">📧</span>
+                                <input type="email" class="form-input" name="email" placeholder="Seu email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-container">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" class="form-input" name="senha" placeholder="Sua senha" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary">Entrar</button>
+                        <div class="form-links">
+                            <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                            <a href="/cadastro" class="secondary-link">Não tem uma conta? Cadastre-se</a>
+                        </div>
+                        <p id="error-message" style="color: red; text-align: center; margin-top: 10px;"></p>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Adiciona um 'escutador de eventos' ao formulário quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const formLogin = document.getElementById('form-login');
+            const mensagemErro = document.getElementById('error-message');
+
+            // Função que será chamada quando o formulário for enviado
+            function fazerLogin(evento) {
+                evento.preventDefault(); // Impede que a página recarregue
+                
+                // Pega os valores dos campos de email e senha
+                const email = formLogin.email.value;
+                const senha = formLogin.senha.value;
+
+                // Prepara os dados para enviar para a API
+                const dados = {
+                    email: email,
+                    senha: senha
+                };
+
+                // Envia os dados para o backend (API)
+                fetch('/api/usuarios/login', {
+                    method: 'POST', // Método de envio
+                    headers: {
+                        'Content-Type': 'application/json' // Avisa que estamos enviando JSON
+                    },
+                    body: JSON.stringify(dados) // Converte o objeto JavaScript para texto JSON
+                })
+                .then(function(resposta) {
+                    // Se a resposta do servidor não for 'ok' (ex: erro 400 ou 500)
+                    if (!resposta.ok) {
+                        // Lança um erro para ser pego pelo .catch()
+                        throw new Error('Email ou senha inválidos.');
+                    }
+                    // Se a resposta for 'ok', converte a resposta para JSON
+                    return resposta.json();
+                })
+                .then(function(usuarioLogado) {
+                    // Guarda as informações do usuário no navegador
+                    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+                    
+                    // Redireciona o usuário para a página inicial
+                    window.location.href = '/';
+                })
+                .catch(function(erro) {
+                    // Se qualquer erro acontecer, mostra a mensagem na tela
+                    mensagemErro.textContent = erro.message;
+                });
+            }
+
+            // Associa a função fazerLogin ao evento de 'submit' do formulário
+            formLogin.addEventListener('submit', fazerLogin);
+        });
+    </script>
+</body>
+</html> 

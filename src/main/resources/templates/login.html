@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ReciclaFácil</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/loginCadastro.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="conteudo-centralizado-login-cadastro">
+        <div class="container-form">
+            <div class="logo-form">
+                <h1>♻️ ReciclaFácil</h1>
+                <p>Sustentabilidade ao seu alcance</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <input type="email" id="email" class="form-input" placeholder="Seu email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="senha" class="form-input" placeholder="Senha" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+            <div class="form-links">
+                <span>Esqueceu a senha?</span>
+                <br>
+                <span>Não tem uma conta? <a href="/cadastro">Cadastre-se</a></span>
+            </div>
+            <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+            <div id="success-message" class="alert alert-success" style="display: none;"></div>
+        </div>
+    </div>
+    <script src="/js/auth.js"></script>
+</body>
+</html> 

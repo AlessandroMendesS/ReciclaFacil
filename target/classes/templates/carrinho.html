@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho - ReciclaFácil</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <!-- Caminhos para CSS geral e específico ajustados -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/carrinho.css?v=1.1">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <div class="conteudo-pagina">
+            <header class="cabecalho-principal">
+                <div class="area-logo">
+                    <div class="container-icone-logo">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path></svg>
+                    </div>
+                    <h2 class="titulo-logo">ReciclaFácil</h2>
+                </div>
+                <nav class="navegacao-cabecalho">
+                    <a class="link-navegacao" href="/">Início</a>
+                    <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+                    <a class="link-navegacao" href="/entrar">Entrar</a>
+                </nav>
+            </header>
+            
+            <main class="principal">
+                <div class="conteudo-centralizado">
+                    <div class="cabecalho-pagina">
+                        <h1 class="titulo-pagina">Meu Carrinho de Coleta</h1>
+                        <p class="subtitulo-pagina">Revise os materiais antes de agendar a coleta.</p>
+                    </div>
+
+                    <div id="container-itens-carrinho" class="container-itens-carrinho">
+                        <!-- Itens do carrinho serão carregados aqui pelo JS -->
+                        <p class="mensagem-carregando">Carregando seus materiais...</p>
+                    </div>
+
+                    <div id="resumo-carrinho" class="resumo-carrinho" style="display: none;">
+                        <h3 class="titulo-resumo">Resumo da Coleta</h3>
+                        <p class="info-resumo">Total de itens: <span id="total-itens-carrinho">0</span></p>
+                        <!-- Outras informações de resumo podem ser adicionadas aqui -->
+                        <button id="btn-agendar-coleta" class="botao-primario btn-agendar-coleta" disabled>
+                            Agendar Coleta
+                        </button>
+                        <button id="btn-limpar-carrinho" class="botao-secundario btn-limpar-carrinho">
+                            Limpar Carrinho
+                        </button>
+                    </div>
+                    
+                    <div id="carrinho-vazio-mensagem" class="carrinho-vazio-mensagem" style="display: none;">
+                        <span class="icone-carrinho-vazio">🛒</span>
+                        <h2>Seu carrinho está vazio!</h2>
+                        <p>Adicione materiais para reciclagem na página de cadastro.</p>
+                        <a href="/cadastrar-material" class="botao-primario">Cadastrar Materiais</a>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Material</h2>
+            <form id="editForm">
+                <input type="hidden" id="edit-material-id">
+                <p><label>Tipo: <input type="text" id="edit-tipo" required></label></p>
+                <p><label>Descrição: <input type="text" id="edit-descricao" required></label></p>
+                <p><label>Quantidade: <input type="number" id="edit-quantidade" required></label></p>
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      // Roda o script quando a página HTML estiver totalmente carregada
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- PARTE 1: VERIFICAÇÃO DE LOGIN E NAVEGAÇÃO ---
+
+        const dadosUsuarioString = localStorage.getItem('usuarioLogado');
+        const usuario = JSON.parse(dadosUsuarioString);
+        const barraNavegacao = document.querySelector('.navegacao-cabecalho');
+        const containerPrincipal = document.querySelector('.conteudo-centralizado');
+
+        if (usuario && usuario.id) {
+          // SE ESTIVER LOGADO:
+
+          // 1. Atualiza a barra de navegação
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+            <a class="link-navegacao" href="/carrinho">Meu Carrinho</a>
+            <a class="link-navegacao" href="/relatorio">Relatório</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+            <a class="link-navegacao" href="#" id="botao-sair">Sair</a>
+          `;
+
+          // 2. Adiciona a funcionalidade de 'Sair'
+          const botaoSair = document.getElementById('botao-sair');
+          botaoSair.addEventListener('click', function() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = '/entrar';
+          });
+
+          // --- PARTE 2: FUNCIONALIDADE DO CARRINHO ---
+          
+          const containerItens = document.getElementById('container-itens-carrinho');
+          const msgCarrinhoVazio = document.getElementById('carrinho-vazio-mensagem');
+          const resumoCarrinho = document.getElementById('resumo-carrinho');
+          const btnLimpar = document.getElementById('btn-limpar-carrinho');
+
+          // Função para buscar os materiais do usuário e mostrar na tela
+          function carregarCarrinho() {
+            fetch(`/api/carrinho/${usuario.id}`)
+              .then(resposta => resposta.json())
+              .then(materiais => {
+                containerItens.innerHTML = ''; // Limpa a lista antes de adicionar os novos itens
+
+                if (materiais.length === 0) {
+                  msgCarrinhoVazio.style.display = 'block';
+                  resumoCarrinho.style.display = 'none';
+                } else {
+                  msgCarrinhoVazio.style.display = 'none';
+                  resumoCarrinho.style.display = 'flex';
+                  
+                  materiais.forEach(function(material) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item-carrinho';
+                    itemDiv.innerHTML = `
+                      <div class="info-item">
+                        <h3>${material.tipo}</h3>
+                        <p>${material.descricao}</p>
+                        <span>Quantidade: ${material.quantidade} ${material.unidade || ''}</span>
+                      </div>
+                      <div class="acoes-item">
+                        <button class="btn-editar" data-id="${material.id}">Editar</button>
+                        <button class="btn-excluir" data-id="${material.id}">Excluir</button>
+                      </div>
+                    `;
+                    containerItens.appendChild(itemDiv);
+                  });
+                }
+              });
+          }
+
+          // Função para remover um item específico do carrinho
+          function removerMaterial(idDoMaterial) {
+            if (confirm('Tem certeza que deseja remover este material?')) {
+              fetch(`/api/carrinho/remover?usuarioId=${usuario.id}&materialId=${idDoMaterial}`, { 
+                method: 'DELETE' 
+              })
+              .then(resposta => {
+                if (resposta.ok) carregarCarrinho(); // Recarrega a lista
+                else alert('Falha ao remover material.');
+              });
+            }
+          }
+
+          // Função para limpar o carrinho inteiro
+          function limparCarrinho() {
+            if (confirm('Tem certeza que deseja LIMPAR TODO o carrinho?')) {
+              fetch(`/api/carrinho/${usuario.id}/limpar`, { method: 'DELETE' })
+                .then(resposta => {
+                  if (resposta.ok) carregarCarrinho(); // Recarrega a lista
+                  else alert('Falha ao limpar o carrinho.');
+                });
+            }
+          }
+
+          // Adiciona os 'escutadores de eventos'
+          btnLimpar.addEventListener('click', limparCarrinho);
+          
+          containerItens.addEventListener('click', function(evento) {
+            const elementoClicado = evento.target;
+            const id = elementoClicado.getAttribute('data-id');
+
+            if (elementoClicado.classList.contains('btn-excluir')) {
+              removerMaterial(id);
+            }
+            if (elementoClicado.classList.contains('btn-editar')) {
+              abrirModalEdicao(id);
+            }
+          });
+
+
+          // --- PARTE 3: FUNCIONALIDADE DO MODAL DE EDIÇÃO ---
+
+          const modal = document.getElementById('editModal');
+          const formEdicao = document.getElementById('editForm');
+          const botaoFecharModal = document.querySelector('.close');
+
+          function abrirModalEdicao(idDoMaterial) {
+            fetch(`/api/materiais/${idDoMaterial}`)
+              .then(res => res.json())
+              .then(material => {
+                formEdicao['edit-material-id'].value = material.id;
+                formEdicao['edit-tipo'].value = material.tipo;
+                formEdicao['edit-descricao'].value = material.descricao;
+                formEdicao['edit-quantidade'].value = material.quantidade;
+                modal.style.display = 'block';
+              });
+          }
+
+          function fecharModal() {
+            modal.style.display = 'none';
+          }
+
+          function salvarEdicao(evento) {
+            evento.preventDefault();
+            const id = formEdicao['edit-material-id'].value;
+
+            fetch(`/api/materiais/${id}`)
+              .then(res => res.json())
+              .then(materialOriginal => {
+                const dadosAtualizados = {
+                  ...materialOriginal,
+                  tipo: formEdicao['edit-tipo'].value,
+                  descricao: formEdicao['edit-descricao'].value,
+                  quantidade: parseInt(formEdicao['edit-quantidade'].value, 10),
+                };
+
+                return fetch(`/api/materiais/${id}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(dadosAtualizados)
+                });
+              })
+              .then(resposta => {
+                if (!resposta.ok) throw new Error('Falha ao salvar.');
+                fecharModal();
+                carregarCarrinho();
+              })
+              .catch(erro => alert(erro.message));
+          }
+
+          // Adiciona os eventos do modal
+          formEdicao.addEventListener('submit', salvarEdicao);
+          botaoFecharModal.onclick = fecharModal;
+          window.onclick = function(evento) {
+            if (evento.target == modal) {
+              fecharModal();
+            }
+          }
+
+          // Finalmente, carrega o carrinho quando a página abre
+          carregarCarrinho();
+
+        } else {
+          // SE NÃO ESTIVER LOGADO:
+          
+          // 1. Atualiza a barra de navegação para visitante
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="#">Sobre</a>
+            <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            <a class="link-navegacao" href="/entrar">Login</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+          `;
+          
+          // 2. Mostra a mensagem para fazer login
+          containerPrincipal.innerHTML = `
+            <div class="cabecalho-pagina">
+                <h1 class="titulo-pagina">Meu Carrinho</h1>
+            </div>
+            <h2>Você precisa estar logado para ver seu carrinho.</h2>
+            <a href="/entrar" class="botao-primario">Fazer Login</a>
+          `;
+        }
+      });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pontos de Coleta - ReciclaFácil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS do Leaflet (alternativa gratuita ao Google Maps) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 70vh; /* Ajuste na altura */
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .container-mapa {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <div class="conteudo-pagina">
+            <header class="cabecalho-principal">
+                <div class="area-logo">
+                    <h2 class="titulo-logo">ReciclaFácil</h2>
+                </div>
+                <nav class="navegacao-cabecalho">
+                    <!-- A navegação será preenchida pelo script -->
+                </nav>
+            </header>
+            
+            <main class="principal">
+                <div class="conteudo-centralizado">
+                    <div class="cabecalho-pagina">
+                        <h1 class="titulo-pagina">Pontos de Coleta em São Carlos</h1>
+                        <p class="subtitulo-pagina">Encontre o local mais próximo para descartar seus recicláveis.</p>
+                    </div>
+                    <div class="container-mapa">
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JS do Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+      // Roda o script quando a página HTML estiver totalmente carregada
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- PARTE 1: VERIFICAÇÃO DE LOGIN E NAVEGAÇÃO ---
+
+        const dadosUsuarioString = localStorage.getItem('usuarioLogado');
+        const usuario = JSON.parse(dadosUsuarioString);
+        const barraNavegacao = document.querySelector('.navegacao-cabecalho');
+
+        if (usuario && usuario.id) {
+          // SE ESTIVER LOGADO:
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+            <a class="link-navegacao" href="/carrinho">Meu Carrinho</a>
+            <a class="link-navegacao" href="/relatorio">Relatório</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+            <a class="link-navegacao" href="#" id="botao-sair">Sair</a>
+          `;
+          const botaoSair = document.getElementById('botao-sair');
+          botaoSair.addEventListener('click', function() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = '/entrar';
+          });
+        } else {
+          // SE NÃO ESTIVER LOGADO:
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="#">Sobre</a>
+            <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            <a class="link-navegacao" href="/entrar">Login</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+          `;
+        }
+
+        // --- PARTE 2: FUNCIONALIDADE DO MAPA ---
+
+        // 1. Define as coordenadas do centro do mapa (São Carlos)
+        const coordenadasSaoCarlos = [-22.0178, -47.8919];
+        
+        // 2. Cria o mapa na 'div' com id="map"
+        const mapa = L.map('map').setView(coordenadasSaoCarlos, 13); // O '13' é o nível de zoom
+
+        // 3. Adiciona o "fundo" do mapa (as ruas, etc.) do OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(mapa);
+
+        // 4. Lista de endereços dos pontos de coleta
+        const pontosColeta = [
+            { coords: [-22.00418, -47.93043], title: "Ecoponto São Carlos VIII" },
+            { coords: [-22.03467, -47.88241], title: "Ecoponto Cidade Aracy" },
+            { coords: [-21.98399, -47.88632], title: "Ecoponto Vida Nova (Planalto Verde)" },
+            { coords: [-22.01524, -47.88041], title: "Ecoponto Jardim Paulistano" },
+            { coords: [-22.02986, -47.91238], title: "Ecoponto Jardim Medeiros" },
+            { coords: [-21.99611, -47.92383], title: "Ecoponto Jardim Ipanema" }
+        ];
+
+        // 5. Adiciona um marcador no mapa para cada ponto de coleta
+        pontosColeta.forEach(function(ponto) {
+          L.marker(ponto.coords)     // Cria o marcador nas coordenadas
+            .addTo(mapa)             // Adiciona o marcador ao mapa
+            .bindPopup(`<b>${ponto.title}</b>`); // Adiciona um pop-up com o nome do local
+        });
+      });
+    </script>
+</body>
+</html> 

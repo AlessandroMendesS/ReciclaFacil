@@ -1,0 +1,182 @@
+/* css/material.css - Estilos para a página de cadastro de material */
+
+.container-formulario-material {
+    background-color: var(--cor-fundo-cartao);
+    padding: 30px;
+    border-radius: var(--border-radius-padrao);
+    box-shadow: var(--box-shadow-padrao);
+    margin-top: 20px;
+}
+
+.formulario-material .secao-formulario {
+    margin-bottom: 30px;
+}
+
+.formulario-material .titulo-secao-form {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+/* Tipos de Material */
+.grade-tipos-material {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.opcao-material input[type="radio"] {
+    display: none; /* Esconde o radio button original */
+}
+
+.cartao-tipo-material {
+    background-color: #f8f9fa;
+    border: 2px solid var(--cor-borda);
+    border-radius: var(--border-radius-padrao);
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    min-height: 110px; /* Altura mínima para alinhar cartões */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.opcao-material input[type="radio"]:checked + .cartao-tipo-material {
+    border-color: var(--cor-primaria);
+    background-color: var(--cor-primaria-suave);
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+}
+
+.cartao-tipo-material:hover {
+    border-color: var(--cor-primaria-hover);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.icone-material {
+    font-size: 2.5em; /* Aumenta o tamanho do emoji/ícone */
+    margin-bottom: 8px;
+}
+
+.nome-material {
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+}
+
+.opcao-material input[type="radio"]:checked + .cartao-tipo-material .nome-material {
+    color: var(--cor-primaria);
+    font-weight: 600;
+}
+
+/* Detalhes do Material */
+.grade-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+}
+
+.rotulo-campo {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 6px;
+}
+
+/* Ações do Formulário */
+.acoes-formulario {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cor-borda);
+}
+
+/* Modal de Sucesso */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* Fundo escurecido */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-conteudo {
+    background-color: var(--cor-fundo-cartao);
+    padding: 30px 40px;
+    border-radius: var(--border-radius-padrao);
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    animation: animarModal 0.3s ease-out;
+}
+
+@keyframes animarModal {
+    from {transform: scale(0.9); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+.modal-icone-sucesso {
+    font-size: 3em;
+    color: var(--cor-sucesso);
+    margin-bottom: 15px;
+}
+
+.modal-conteudo h3 {
+    font-size: 1.5em;
+    color: var(--cor-texto-principal);
+    margin-bottom: 10px;
+}
+
+.modal-conteudo p {
+    color: var(--cor-texto-secundario);
+    margin-bottom: 25px;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.modal-acoes .botao-primario,
+.modal-acoes .botao-secundario {
+    padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+    .grade-tipos-material {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .acoes-formulario {
+        flex-direction: column;
+    }
+    .acoes-formulario .botao-primario,
+    .acoes-formulario .botao-secundario {
+        width: 100%;
+    }
+    .modal-acoes {
+        flex-direction: column;
+    }
+    .modal-acoes .botao-primario,
+    .modal-acoes .botao-secundario {
+        width: 100%;
+    }
+} 

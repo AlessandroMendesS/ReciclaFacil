@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatório de Materiais - ReciclaFácil</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <!-- Caminhos para CSS geral e específico ajustados -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/relatorio.css">
+</head>
+<body>
+    <div th:replace="fragments/vlibras :: vlibras-widget"></div>
+    <div class="pagina-geral">
+        <div class="conteudo-pagina">
+            <header class="cabecalho-principal">
+                <div class="area-logo">
+                    <div class="container-icone-logo">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path></svg>
+                    </div>
+                    <h2 class="titulo-logo">ReciclaFácil</h2>
+                </div>
+                <nav class="navegacao-cabecalho">
+                    <a class="link-navegacao" href="/">Início</a>
+                    <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+                    <a class="link-navegacao" href="/carrinho">Carrinho <span id="contador-carrinho" class="contador-badge" style="display: none;">0</span></a>
+                    <a class="link-navegacao" href="/entrar">Entrar</a>
+                </nav>
+            </header>
+            
+            <main class="principal">
+                <div class="conteudo-centralizado">
+                    <div class="cabecalho-pagina">
+                        <h1 class="titulo-pagina">Relatório de Materiais Cadastrados</h1>
+                        <p class="subtitulo-pagina">Visualize o histórico de todos os seus materiais registrados.</p>
+                    </div>
+
+                    <div class="container-grafico">
+                        <canvas id="grafico-materiais"></canvas>
+                    </div>
+
+                    <div class="filtros-relatorio">
+                        <label for="filtro-tipo" class="rotulo-filtro">Filtrar por tipo:</label>
+                        <select id="filtro-tipo" class="campo-select">
+                            <option value="todos">Todos os Tipos</option>
+                            <option value="plastico">Plástico</option>
+                            <option value="vidro">Vidro</option>
+                            <option value="metal">Metal</option>
+                            <option value="papel">Papel</option>
+                        </select>
+
+                        <label for="ordenar-por" class="rotulo-filtro">Ordenar por:</label>
+                        <select id="ordenar-por" class="campo-select">
+                            <option value="dataCadastro">Data de Cadastro (Mais Recente)</option>
+                            <option value="tipo">Tipo de Material</option>
+                            <option value="descricao">Descrição</option>
+                        </select>
+                    </div>
+
+                    <div id="container-relatorio" class="container-relatorio">
+                        <!-- Itens do relatório serão carregados aqui -->
+                        <p class="mensagem-carregando">Carregando relatório...</p>
+                    </div>
+                    
+                    <div id="relatorio-vazio-mensagem" class="relatorio-vazio-mensagem" style="display: none;">
+                        <span class="icone-relatorio-vazio">📊</span>
+                        <h2>Nenhum material encontrado.</h2>
+                        <p>Você ainda não cadastrou nenhum material ou o filtro aplicado não retornou resultados.</p>
+                        <a href="/cadastrar-material" class="botao-primario">Cadastrar Primeiro Material</a>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+      // Roda o script quando a página HTML estiver totalmente carregada
+      document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- PARTE 1: VERIFICAÇÃO DE LOGIN E NAVEGAÇÃO ---
+
+        const dadosUsuarioString = localStorage.getItem('usuarioLogado');
+        const usuario = JSON.parse(dadosUsuarioString);
+        const barraNavegacao = document.querySelector('.navegacao-cabecalho');
+        const containerPrincipal = document.querySelector('.conteudo-centralizado');
+
+        if (usuario && usuario.id) {
+          // SE ESTIVER LOGADO:
+
+          // 1. Atualiza a barra de navegação
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="/cadastrar-material">Cadastrar Material</a>
+            <a class="link-navegacao" href="/carrinho">Meu Carrinho</a>
+            <a class="link-navegacao" href="/relatorio">Relatório</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+            <a class="link-navegacao" href="#" id="botao-sair">Sair</a>
+          `;
+
+          // 2. Adiciona a funcionalidade de 'Sair'
+          const botaoSair = document.getElementById('botao-sair');
+          botaoSair.addEventListener('click', function() {
+            localStorage.removeItem('usuarioLogado');
+            window.location.href = '/entrar';
+          });
+
+          // --- PARTE 2: FUNCIONALIDADE DO RELATÓRIO ---
+          
+          let meuGrafico = null; // Guarda a instância do gráfico para poder atualizá-la
+
+          // Função para desenhar o gráfico na tela
+          function renderizarGrafico(materiais) {
+            const canvas = document.getElementById('grafico-materiais');
+            const contexto = canvas.getContext('2d');
+            
+            // Agrupa os materiais por tipo e soma as quantidades
+            const dadosPorTipo = materiais.reduce(function(acc, material) {
+              acc[material.tipo] = (acc[material.tipo] || 0) + material.quantidade;
+              return acc;
+            }, {});
+
+            const labels = Object.keys(dadosPorTipo); // Ex: ['Plástico', 'Vidro', 'Metal']
+            const data = Object.values(dadosPorTipo); // Ex: [5, 3, 2]
+
+            // Se já existir um gráfico, destrói ele antes de criar um novo
+            if (meuGrafico) {
+              meuGrafico.destroy();
+            }
+
+            // Cria um novo gráfico de pizza
+            meuGrafico = new Chart(contexto, {
+              type: 'pie',
+              data: {
+                labels: labels,
+                datasets: [{
+                  label: 'Quantidade por Tipo',
+                  data: data,
+                  backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                  ]
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  title: { display: true, text: 'Distribuição de Materiais por Tipo' }
+                }
+              }
+            });
+          }
+
+          // Função para mostrar a lista de materiais
+          function renderizarLista(materiais) {
+            const containerLista = document.getElementById('container-relatorio');
+            containerLista.innerHTML = ''; // Limpa a lista antiga
+
+            materiais.forEach(function(material) {
+              const itemHtml = `
+                <div class="item-relatorio">
+                  <p><strong>Tipo:</strong> ${material.tipo}</p>
+                  <p><strong>Descrição:</strong> ${material.descricao}</p>
+                  <p><strong>Quantidade:</strong> ${material.quantidade}</p>
+                  <p><strong>Data:</strong> ${new Date(material.dataCadastro).toLocaleDateString()}</p> 
+                </div>
+              `;
+              containerLista.insertAdjacentHTML('beforeend', itemHtml);
+            });
+          }
+
+          // Função principal para carregar os dados do relatório
+          function carregarRelatorio() {
+            fetch('/api/materiais')
+              .then(resposta => resposta.json())
+              .then(todosOsMateriais => {
+                // Filtra para pegar apenas os materiais do usuário logado
+                const materiaisDoUsuario = todosOsMateriais.filter(function(material) {
+                  return material.usuario && material.usuario.id === usuario.id;
+                });
+                
+                if (materiaisDoUsuario.length === 0) {
+                  document.getElementById('relatorio-vazio-mensagem').style.display = 'block';
+                  document.querySelector('.container-grafico').style.display = 'none';
+                } else {
+                  renderizarGrafico(materiaisDoUsuario);
+                  renderizarLista(materiaisDoUsuario);
+                }
+              })
+              .catch(erro => {
+                console.error("Falha ao carregar relatório:", erro);
+                document.getElementById('container-relatorio').innerHTML = "<p>Não foi possível carregar o relatório.</p>";
+              });
+          }
+
+          // Inicia o processo carregando o relatório
+          carregarRelatorio();
+
+        } else {
+          // SE NÃO ESTIVER LOGADO:
+
+          // 1. Atualiza a barra de navegação para visitante
+          barraNavegacao.innerHTML = `
+            <a class="link-navegacao" href="#">Sobre</a>
+            <a class="link-navegacao" href="/cadastro">Cadastrar</a>
+            <a class="link-navegacao" href="/entrar">Login</a>
+            <a class="link-navegacao" href="/mapa">Pontos de Coleta</a>
+          `;
+          
+          // 2. Mostra a mensagem para fazer login
+          containerPrincipal.innerHTML = `
+             <div class="cabecalho-pagina">
+                <h1 class="titulo-pagina">Relatório de Materiais</h1>
+            </div>
+            <h2>Você precisa estar logado para ver o relatório.</h2>
+            <a href="/entrar" class="botao-primario">Fazer Login</a>
+          `;
+        }
+      });
+    </script>
+</body>
+</html> 
